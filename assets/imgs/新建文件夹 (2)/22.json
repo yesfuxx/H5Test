@@ -1,0 +1,44 @@
+{"frames": {
+
+"brawler48x48-0.png":
+{
+	"frame": {"x":47,"y":1,"w":25,"h":34},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":14,"w":25,"h":34},
+	"sourceSize": {"w":48,"h":48}
+},
+"brawler48x48-1.png":
+{
+	"frame": {"x":1,"y":1,"w":21,"h":35},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":13,"w":21,"h":35},
+	"sourceSize": {"w":48,"h":48}
+},
+"brawler48x48-2.png":
+{
+	"frame": {"x":74,"y":1,"w":23,"h":34},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":14,"w":23,"h":34},
+	"sourceSize": {"w":48,"h":48}
+},
+"brawler48x48-3.png":
+{
+	"frame": {"x":24,"y":1,"w":21,"h":35},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":9,"y":13,"w":21,"h":35},
+	"sourceSize": {"w":48,"h":48}
+}},
+"meta": {
+	"app": "https://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "22.png",
+	"format": "RGBA8888",
+	"size": {"w":98,"h":37},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:8751a38179e034ba535a498b7457877e:7a99482ab641e7134bba3d6f71eeb475:7455b1e6c720d70b0a7bda0965502add$"
+}
+}
