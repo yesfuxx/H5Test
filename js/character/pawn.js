@@ -50,7 +50,7 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
 
 
         //event , fn , The context to invoke the listener with.
-        scene.events.once('death2Do_Once', this.death2Do, this);
+        this.once('death2Do', this.death2Do, this);
         // this.events.on('dododo', this.handler, this);
         // handler (){
         //     this.add.image(400, 300, 'ok');
@@ -59,8 +59,12 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
     }
     death2Do(){
         this.playAnim_die();
+
         //延时事件
-        // timedEvent = this.scene.time.delayedCall(3000, this.onEvent, [], this);
+        this.scene.time.addEvent({ delay: 900, callback: ()=>{
+            this.setVisible(false);//隐藏
+            this.destroy();//销毁自身
+        }, callbackScope: this }, this);
     }
 
     onEvent (){
@@ -82,8 +86,7 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
         }, this);
     }
     playAnim_die(){//死亡动画
-        this.play('die', true);
-        
+        this.play('die', true);       
     }
 
 
@@ -97,8 +100,8 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
         // console.log(this.hp)
 
         if(this.hp <= 0){
-            this.dead = true;
-            this.scene.events.emit('death2Do_Once');
+            this.dead = true;           
+            this.emit('death2Do');
         }
         else{
             //———————————————————攻击间隔检测————————————————————//
@@ -166,9 +169,13 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
                
             },
             onComplete: function (tween, targets) {    
-                targets[0].playAnim_Default();
-                targets[0].moving = false;
-                targets[0].canAttack = true;
+                let temp = targets[0];
+                if(temp.hp > 0){
+                    temp.playAnim_Default();
+                    temp.moving = false;
+                    // temp.canAttack = true;
+                }
+                
             },
             // onYoyo: function () { console.log('onYoyo'); console.log(arguments); },
             // onRepeat: function () { console.log('onRepeat'); console.log(arguments); },

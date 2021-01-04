@@ -8,6 +8,7 @@ class MyGroup extends Phaser.Physics.Arcade.Group{
 
         this.row = 0;
         this.colomn = 0;
+        this.group_Enemy;
     }
 
     create(){
@@ -17,7 +18,8 @@ class MyGroup extends Phaser.Physics.Arcade.Group{
     update(time, delta){
 
         this.getChildren().forEach(item => {
-            item.update(time, delta);
+            //if(item.hp > 0)
+                item.update(time, delta);
         })
     }
 
@@ -75,7 +77,7 @@ class MyGroup extends Phaser.Physics.Arcade.Group{
             cellHeight: cell_Colomn, 
             x: locX, 
             y: locY,
-            // position: Phaser.Display.Align.BOTTOM_CENTER
+            position: Phaser.Display.Align.BOTTOM_CENTER
         });
     }
 
@@ -100,7 +102,7 @@ class MyGroup extends Phaser.Physics.Arcade.Group{
         });
     }
 
-    anim_Play(animType){
+    anim_Play(animType, tag = true){
         switch (animType) {
             case 'default':
             case 'idle':
@@ -114,8 +116,9 @@ class MyGroup extends Phaser.Physics.Arcade.Group{
                 });       
                 break;
             case 'attack':
-                this.getChildren().forEach(item => {           
-                    item.playAnim_Attack()();                    
+                this.getChildren().forEach(item => {         
+                    item.canAttack = tag;
+                    // item.playAnim_Attack();                    
                 });       
                 break;
             // case 'die':
@@ -134,10 +137,30 @@ class MyGroup extends Phaser.Physics.Arcade.Group{
 
     }
 
-    allDead(){
-        ttt = this.time.delayedCall(3000, onEvent, [], this);
+    // allAttack()
+    
+
+    allDead(delayTime = 200){
+        this.scene.time.addEvent({ delay: delayTime, callback: ()=>{
+
+            let index = Phaser.Math.Between(0, this.getLength() - 1)
+            console.log(index) 
+            let child = this.getChildren()[index];
+            child.hp = -100;       
+    
+            //等待一小会，使hp设置成功后，进行移除
+            this.scene.time.addEvent({ delay: 50, callback: ()=>{ 
+                this.remove(child);
+            }, callbackScope: this }, this);
+
+        }, callbackScope: this, repeat: this.getLength() - 1 });
+
+        this.scene.time.addEvent({ delay: delayTime * this.getLength(), callback: ()=>{
+            this.group_Enemy.anim_Play('attack', false);
+            // this.group_Enemy.anim_Play('idle');
+        }, callbackScope: this});
+
+        
     }
 
-
 }
-var ttt

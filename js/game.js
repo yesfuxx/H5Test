@@ -35,12 +35,19 @@ class Game extends Phaser.Scene{
         this.group2.gridAlign(650, 200, 4, 3, 40, 30)
         this.group2.move_ByColomn(2000, -220, 0, -20, 0);
 
+        this.group1.group_Enemy = this.group2;
+        this.group2.group_Enemy = this.group1;
 
 
 
-
-        this.group2.anim_Play('die');
+        // this.group2.anim_Play('die');
         // this.group2.move_ByColomn(2000, 200, 100, 30, 20);
+
+        this.time.addEvent({ delay: 2000, callback: ()=>{
+            this.group2.allDead();
+        }, callbackScope: this });
+
+        
 
 
 
