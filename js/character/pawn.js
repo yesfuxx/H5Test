@@ -20,18 +20,20 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
         
         this.hp = 100;
         this.dead = false;
+        this.row = 0;
+        this.colomn = 0;
 
         //#region   //———————————————————攻击————————————————————//
         /**攻击 */
-        this.attack = false;
-        /**攻击力 */
-        this.attackDamage = 50;
-        /**攻击间隔 */
-        this.attackInterval = 500;//1秒
-        /**能否攻击 */
-        this.canAttack = false;
-        /**上次攻击后，到现在的时间 */
-        this.attackTime_LastPassed = 0;
+        // this.attack = false;
+        // /**攻击力 */
+        // this.attackDamage = 50;
+        // /**攻击间隔 */
+        // this.attackInterval = 500;//1秒
+        // /**能否攻击 */
+        // this.canAttack = false;
+        // /**上次攻击后，到现在的时间 */
+        // this.attackTime_LastPassed = 0;
         //#endregion    //———————————————————攻击————————————————————//
 
         /**阵营 */
@@ -74,46 +76,47 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
 
     //———————————————————动画————————————————————//
     playAnim_Default(){//默认动画
-        this.play({key : 'idle', frameRate: Phaser.Math.Between(6, 12)}, true);
+        if(!this.dead){
+            this.play({key : 'idle', frameRate: Phaser.Math.Between(7, 9)}, true);
+        }
     }
     playAnim_Move(){//移动动画
-        this.play('walk', true);
+        if(!this.dead){
+            this.play({key : 'walk', frameRate: Phaser.Math.Between(7, 9)}, true);
+        }
     }
     playAnim_Attack(){//攻击动画
-        this.play({key:'punch', frameRate: Phaser.Math.Between(6, 12)  }, true).on('animationcomplete', ()=>{
-            this.attackTime_LastPassed = 0;
-            this.attack = false;
-        }, this);
+        if(!this.dead){
+            this.play({key:'punch', frameRate: Phaser.Math.Between(6, 12)  }, true).on('animationcomplete', ()=>{      
+                this.playAnim_Default();
+            }, this);
+        }
     }
     playAnim_die(){//死亡动画
         this.play('die', true);       
     }
+    //—————————————————————————————————————————//
 
-
-    //性能原因，需手动调用
-    create(){
-        //console.log('pawn create');   
-        // this.addCheckBox_Attack();
-    }
     update(time,delta){      
         // this.refreshBody();
-        // console.log(this.hp)
+        //设置depth
+        this.setDepth(this.y);
 
         if(this.hp <= 0){
             this.dead = true;           
             this.emit('death2Do');
         }
-        else{
-            //———————————————————攻击间隔检测————————————————————//
-            if(this.canAttack){
-                this.attackTime_LastPassed += delta;
-                if(this.attackTime_LastPassed > this.attackInterval){
-                    this.attack = true;
-                    this.playAnim_Attack();
-                }
-            }         
-            //———————————————————————————————————————————————————//
-        }
+        // else{
+        //     ———————————————————攻击间隔检测————————————————————//
+        //     if(this.canAttack){
+        //         this.attackTime_LastPassed += delta;
+        //         if(this.attackTime_LastPassed > this.attackInterval){
+        //             this.attack = true;
+        //             this.playAnim_Attack();
+        //         }
+        //     }         
+        //     ———————————————————————————————————————————————————//
+        // }
         
     }
 
@@ -141,13 +144,13 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
      * @param {*} time 
      * @param {*} randomDelayTime  默认为0，整齐移动
      */
-    moveTo(locX, locY, time, randomDelayTime = 0){//ES6 可以使用默认参数值
+    moveTo(loc = {x: 0, y: 0}, time, randomDelayTime = 0){//ES6 可以使用默认参数值
         //设置朝向
-        if(locX > this.x){
+        if(loc.x > this.x){
             this.orientation = 'right';
             this.setFlipX(!this.bOrientationRight_Asset);
 
-        }else if(locX < this.x){
+        }else if(loc.x < this.x){
             this.orientation = 'left';
             this.setFlipX(this.bOrientationRight_Asset);    
         }
@@ -155,8 +158,8 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
         //tween 移动
         var tween = this.scene.tweens.add({
             targets: this,
-            x: locX,
-            y: locY,
+            x: loc.x,
+            y: loc.y,
             ease: 'Power0',
             duration: time,
             yoyo: false,
@@ -173,7 +176,6 @@ class Pawn extends Phaser.Physics.Arcade.Sprite{
                 if(temp.hp > 0){
                     temp.playAnim_Default();
                     temp.moving = false;
-                    // temp.canAttack = true;
                 }
                 
             },

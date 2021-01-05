@@ -14,6 +14,8 @@ class Boot extends Phaser.Scene{
 
 
         this.load.atlas('brawler', 'assets/spritesheets/brawler.png', 'assets/spritesheets/brawler.json');
+
+        this.load.spritesheet('projectile', 'assets/spritesheets/beam.png', {frameWidth:16,frameHeight:16});
     }
 
     create(){
@@ -86,8 +88,15 @@ class Boot extends Phaser.Scene{
 
        //#endregion
 
+       //projecile
+        this.anims.create({
+            key:'projectile',
+            frames:this.anims.generateFrameNumbers('beam'),
+            frameRate:20,
+            repeat:-1
+        });
 
-        this.add.text(20,20,'Loading game...');
+
         //this.scene.start('start');
         this.scene.start('game');
 
